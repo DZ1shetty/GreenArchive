@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flora Archive — Botanical Herbarium</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation / Header -->
+    <header class="header">
+        <div class="logo">
+            <span class="leaf">🌿</span>
+            <h1>Flora Archive</h1>
+        </div>
+        <div class="header-actions">
+            <button id="add-btn" class="btn btn-primary">+ Add Specimen</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Stats / Overview (Minimalistic) -->
+        <section class="overview">
+            <div class="stat-card">
+                <span class="stat-label">Total Specimens</span>
+                <span id="stat-total" class="stat-value">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Needs Water Today</span>
+                <span id="stat-water" class="stat-value">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">High Care Level</span>
+                <span id="stat-high-care" class="stat-value">0</span>
+            </div>
+        </section>
+
+        <!-- Main Content Split view -->
+        <div class="split-view-container">
+            <section class="grid-section">
+            <div class="section-title">
+                <h2>Specimens Catalogue</h2>
+                <div class="filter-controls">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search plants...">
+                    <select id="filter-care" class="select-input">
+                        <option value="">All Care Levels</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+            </div>
+            <div id="grid-container" class="grid-container">
+                <!-- Cards will be injected here via app.js -->
+                <div class="loading">Loading botanical logs...</div>
+            </div>
+        </section>
+
+        <!-- Detailed Profile Panel -->
+        <aside id="drawer" class="details-pane">
+            <div class="drawer-content">
+                <span class="drawer-close">&times;</span>
+                <div class="drawer-header">
+                    <span class="drawer-emoji">🌿</span>
+                    <h2 id="drawer-name">No Specimen Selected</h2>
+                    <p id="drawer-scientific" class="scientific-name">Select a plant from the archives</p>
+                </div>
+                
+                <div class="drawer-section">
+                    <h3>Botanical Profile</h3>
+                    <div class="spec-grid">
+                        <div class="spec-item"><span class="spec-label">Care Level</span><span id="drawer-care">-</span></div>
+                        <div class="spec-item"><span class="spec-label">Sunlight</span><span id="drawer-sunlight">-</span></div>
+                        <div class="spec-item"><span class="spec-label">Watering</span><span id="drawer-water">-</span></div>
+                    </div>
+                </div>
+
+                <div class="drawer-section">
+                    <h3>Log Notes</h3>
+                    <p id="drawer-notes" class="drawer-notes">No logs recorded.</p>
+                </div>
+            </div>
+        </aside>
+        </div> <!-- Close split-view-container -->
+    </main>
+
+    <!-- Add/Edit Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Log New Specimen</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <form id="specimen-form" class="form">
+                <input type="hidden" id="specimen-id">
+                
+                <div class="form-group">
+                    <label for="name">Common Name *</label>
+                    <input type="text" id="name" required placeholder="e.g., Monstera Deliciosa" list="plant-options">
+                    <datalist id="plant-options">
+                        <option value="Monstera Deliciosa">
+                        <option value="Snake Plant">
+                        <option value="Calathea Ornata">
+                        <option value="Fiddle Leaf Fig">
+                        <option value="Spider Plant">
+                        <option value="Aloe Vera">
+                        <option value="Peace Lily">
+                        <option value="ZZ Plant">
+                        <option value="Rubber Plant">
+                        <option value="Pothos">
+                    </datalist>
+                </div>
+
+                <div class="form-group">
+                    <label for="scientificName">Scientific Name</label>
+                    <input type="text" id="scientificName" placeholder="e.g., Monstera deliciosa Liebm.">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="careLevel">Care Level</label>
+                        <select id="careLevel" class="select-input">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sunlight">Sunlight</label>
+                        <select id="sunlight" class="select-input">
+                            <option value="Low">Low</option>
+                            <option value="Partial">Partial</option>
+                            <option value="Bright Indirect" selected>Bright Indirect</option>
+                            <option value="Full">Full</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="waterFrequency">Watering (Every x days) *</label>
+                    <input type="number" id="waterFrequency" required min="1" placeholder="7">
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes & Observation</label>
+                    <textarea id="notes" rows="3" placeholder="Add growth tracker or care notes..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-btn-action">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Archive</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirm-modal" class="confirm-modal">
+        <div class="confirm-content">
+            <div class="confirm-icon">⚠️</div>
+            <h3 id="confirm-title">Archive Specimen?</h3>
+            <p id="confirm-message">This action will permanently remove the item from the digital herbarium archive.</p>
+            <div class="confirm-actions">
+                <button id="confirm-cancel" class="btn btn-secondary">Keep Specimen</button>
+                <button id="confirm-delete" class="btn btn-confirm-delete btn">Delete Archive</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
